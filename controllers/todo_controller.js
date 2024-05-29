@@ -1,6 +1,6 @@
 const {Todo} = require('../models')
 
-class TodoController {
+class TodoController { // gerbang / Gateway => request dari client
     static async create(req, res, next) {
         const {title, completed, user_id} = req.body
         const data = await Todo.create(

@@ -1,16 +1,19 @@
-const { User } = require('../models')
-const bcrypt = require('bcrypt');
+const { User } = require('../models') // ini nanti gaperlu
+const bcrypt = require('bcrypt'); // ini gaperlu
+const user_service = require("../service/user")
 class UserController {
     static async register(req, res, next) {
         const { name, email, password } = req.body;
-        const hashedPassword = bcrypt.hashSync(password, 8);
 
         try {
-            const user = await User.create({
-                name,
-                email,
-                password: hashedPassword
-            });
+            const user = await user_service.register(
+                {
+                    name,
+                    email,
+                    password
+                }
+            )
+
 
             res.status(201).json(user);
         } catch (error) {
@@ -41,6 +44,33 @@ class UserController {
         })
 
         res.status(201).json(data);
+    }
+
+    static async upload(req, res, next) {
+
+        const {id} = req.params;
+        const file = req.file
+
+        const user = await User.findByPk(id)
+
+        if (!user) {
+            return res.status(400).json({
+                message: "no user with id = " + id + " found!"
+            })
+        }
+
+        if (!file) {
+            return res.status(400).json({
+                message: "no image detected"
+            })
+        }
+
+        const new_image_url = `http://localhost:3000/upload/${file.filename}`
+        user.update({
+            image_url: new_image_url
+        })
+
+        res.status(201).json({message: "success updating profile picture"})
     }
 
     static async get(req, res, next) {
