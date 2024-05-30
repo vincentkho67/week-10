@@ -14,8 +14,7 @@ class UserRepository {
         } catch(e) {
             // console.log(e)
 
-        }
-        
+        } 
     }
 }
 
