@@ -1,0 +1,4 @@
+Flow Week 11
+- Bikin JWT di Register dan Login
+- Unit test
+- Docker2an -> kita gaperlu nodemon di terminal vscode/ local

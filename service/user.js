@@ -14,6 +14,18 @@ class UserService {
 
         return user
     }
+
+    static async login(request) {
+        const {email, password} = request
+
+        const user = await user_repository.findByEmail(email)
+
+        if (!user || !bcrypt.compareSync(password, user.password)) {
+            return null
+        }
+
+        return user;
+    }
 }
 
 module.exports = UserService

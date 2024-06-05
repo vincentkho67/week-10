@@ -1,6 +1,8 @@
 const { User } = require('../models') // ini nanti gaperlu
 const bcrypt = require('bcrypt'); // ini gaperlu
 const user_service = require("../service/user")
+const jwt = require('jsonwebtoken')
+const SECRET_KEY = "secret"
 class UserController {
     static async register(req, res, next) {
         const { name, email, password } = req.body;
@@ -25,13 +27,19 @@ class UserController {
         const { email, password } = req.body;
 
         try {
-            const user = await User.findOne({ where: { email } });
+            const user = await user_service.login({
+                email, password
+            })
 
-            if (!user || !bcrypt.compareSync(password, user.password)) {
-                return res.status(401).json({ message: 'Invalid email or password' });
+            if (!user) {
+                return res.status(401).json({message: "invalid credential"})
             }
 
-            res.status(200).json({ message: 'Login successful' });
+            // dmpwaomdwampodmwoapmdpowaopd2-1m-d31-m -> "lakukan decode" + "kunci kita secret" -> id: 1, email: halo@email.com // decode
+            // id: 1, email: halo@email.com -> SECRET_KEY -> dmpwaomdwampodmwoapmdpowaopd2-1m-d31-m // encode
+            const token = jwt.sign({id: user.id, email:user.email}, SECRET_KEY, {expiresIn: '1h'});
+
+            res.status(200).json({message: token})
         } catch (error) {
             next(error);
         }

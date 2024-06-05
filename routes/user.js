@@ -23,7 +23,7 @@ router.post('/upload/:id', upload.single('image_url'), UserController.upload)
 router.post('/cek', UserController.upload)
 
 router.post('/', UserController.create);
-router.get('/', UserController.get);
+router.get('/',auth, UserController.get);
 router.get('/:id', UserController.getOne);
 router.delete('/:id', UserController.delete)
 router.post('/login', UserController.login)

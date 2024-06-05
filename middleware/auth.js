@@ -1,25 +1,20 @@
 // middleware/auth.js
 const { User } = require('../models');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken')
+const SECRET_KEY = 'secret'
+
 
 async function authenticate(req, res, next) {
-    const { email, password } = req.headers;
+    const authHeader = req.headers.authorization;
+    const token = authHeader.split(' ')[1];
 
-    if (!email || !password) {
-        return res.status(401).json({ message: 'Email and password are required' });
-    }
-
-    try {
-        const user = await User.findOne({ where: { email } });
-
-        if (!user || !bcrypt.compareSync(password, user.password)) {
-            return res.status(401).json({ message: 'Invalid email or password' });
-        }
-
-        req.user = user;
+    if (token) {
+        const decodedToken = jwt.verify(token, SECRET_KEY);
+        req.user = decodedToken;
         next();
-    } catch (error) {
-        next(error);
+    } else {
+        res.status(401).json({message: "Unauthorized"})
     }
 }
 

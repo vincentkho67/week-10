@@ -3,7 +3,14 @@ const config = {
         username: "root",
         password: "root",
         database: "todos",
-        host: "localhost",
+        host: "sqlserver",
+        dialect: "mysql"
+    },
+    test: {
+        username: "root",
+        password: "root",
+        database: "todos",
+        host: "sqlserver",
         dialect: "mysql"
     }
 }
